@@ -7,7 +7,7 @@ This tool is a python library wrapper for Mal-unpack. Code has been adapted from
 1. Clone this repository:
 
 ```console
-git clone https://github.com/hasherezade/mal_unpack.git
+git clone https://github.com/hasherezade/mal_unpack_py.git
 ```
 2. Fetch needed executables: go to [`bin`](../bin), and follow the steps from the [README](../bin/README.md).
 3. Install `malunpack` library by following the [README](../mal_unpack_lib/malunpack/README.md)
