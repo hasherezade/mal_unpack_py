@@ -12,9 +12,11 @@ import uuid
 import hashlib
 import json
 import pefile
-
-# Mal-Unpack path and DLL loaders
-UTIL_PATH="../../bin/"
+try:
+    from util_path import UTIL_PATH
+except:
+    UTIL_PATH="..\\..\\bin\\"
+    
 MAL_UNPACK_EXE = UTIL_PATH + "mal_unpack.exe"
 DLL_LOAD64 = UTIL_PATH + "dll_load64.exe"
 DLL_LOAD32 = UTIL_PATH + "dll_load32.exe"

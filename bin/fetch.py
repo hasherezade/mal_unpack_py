@@ -30,6 +30,10 @@ def main():
     if (is_windows_64bit()):
         url_mal_unp = url_mal_unp64
         
+    dirpath = ("UTIL_PATH=\""+ os.path.abspath(".") +"\\\"").encode('unicode-escape')
+    open("../runner/util_path.py", 'wb').write(dirpath)
+    open("../mal_unpack_lib/util_path.py", 'wb').write(dirpath)
+
     urls = {"dll_load32.exe" : url1, "dll_load64.exe" : url2, "mal_unpack.zip" : url_mal_unp}
     for fname in urls:
         if not download_file(fname, urls[fname]):
