@@ -97,7 +97,6 @@ class MalUnpack:
             sys.exit()
 
         sample = self.rename_sample(self.is_dll)
-        print(sample)
 
         cmd = [MAL_UNPACK_EXE,
         '/timeout', str(timeout),
