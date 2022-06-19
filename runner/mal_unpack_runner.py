@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+"""mal_unpack_runner.py: A Python helper to deploy mal_unpack."""
+
+__author__ = 'hasherezade (hasherezade.net)'
+__license__ = "MIT"
+__version__ = "1.0"
+
 import sys, os, subprocess
 from pathlib import Path
 import shutil

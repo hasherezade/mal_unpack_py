@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+
+"""fetch.py: A helper downloading and installing dependencies required by mal_unpack Python wrappers"""
+
+__author__ = 'hasherezade (hasherezade.net)'
+__license__ = "MIT"
+__version__ = "1.0"
    
 import requests
 import zipfile
