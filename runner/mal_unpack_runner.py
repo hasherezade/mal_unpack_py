@@ -18,9 +18,9 @@ try:
 except:
     UTIL_PATH="..\\bin\\"
     
-MAL_UNPACK_EXE = UTIL_PATH + "mal_unpack.exe"
-DLL_LOAD64 = UTIL_PATH + "dll_load64.exe"
-DLL_LOAD32 = UTIL_PATH + "dll_load32.exe"
+MAL_UNPACK_EXE = "mal_unpack.exe"
+DLL_LOAD64 = "dll_load64.exe"
+DLL_LOAD32 = "dll_load32.exe"
 DUMPS_DIR = "dumps"
 
 def mal_unp_res_to_str(returncode):
@@ -88,22 +88,23 @@ def run_and_dump(sample, timeout, sample_out_dir, root_out_dir):
     orig_name = sample
     sample = rename_sample(sample, is_dll)
     print("Sample name: " + sample)
-    cmd = [MAL_UNPACK_EXE,
+    cmd = [ os.path.join(UTIL_PATH, MAL_UNPACK_EXE),
     '/timeout' , str(timeout),
     '/dir', sample_out_dir,
     '/img', sample,
     '/hooks', '1',
     '/shellc' , '1',
-    '/trigger', 'T']
+    '/trigger', 'T'
+    ]
     
     exe_name = sample
     if is_dll:
         cmd.append('/cmd')
         cmd.append(sample + ' #1') #run the first exported function
         if is_64b:
-            exe_name = DLL_LOAD64
+            exe_name = os.path.join(UTIL_PATH, DLL_LOAD64)
         else:
-            exe_name = DLL_LOAD32
+            exe_name = os.path.join(UTIL_PATH, DLL_LOAD32)
 
     cmd.append('/exe')
     cmd.append(exe_name)
@@ -145,14 +146,14 @@ def unpack_dir(rootdir, timeout, out_dir):
 def main():
 
     # check required elements:
-    if not os.path.isfile(MAL_UNPACK_EXE):
-        print("[ERROR] MalUnpack binary missing. Please copy " + MAL_UNPACK_EXE + " to the current directory")
+    if not os.path.isfile(os.path.join(UTIL_PATH, MAL_UNPACK_EXE)):
+        print("[ERROR] MalUnpack binary missing. Please copy \'" + MAL_UNPACK_EXE + "\' to the \'" + UTIL_PATH + "\' directory")
         return
-    if not os.path.isfile(DLL_LOAD64):
-        print("[ERROR] DLL load binary missing. Please copy " + DLL_LOAD64 + "to the current directory")
+    if not os.path.isfile(os.path.join(UTIL_PATH, DLL_LOAD64)):
+        print("[ERROR] DLL load binary missing. Please copy \'" + DLL_LOAD64 + "\' to the \'" + UTIL_PATH + "\' directory")
         return
-    if not os.path.isfile(DLL_LOAD32):
-        print("[ERROR] DLL load binary missing. Please copy " + DLL_LOAD32 + "to the current directory")
+    if not os.path.isfile(os.path.join(UTIL_PATH, DLL_LOAD32)):
+        print("[ERROR] DLL load binary missing. Please copy \'" + DLL_LOAD32 + "\' to the \'" + UTIL_PATH + "\' directory")
         return
         
     # parse input arguments:
