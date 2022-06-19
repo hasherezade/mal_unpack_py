@@ -1,6 +1,6 @@
 # Mal Unpack Python Library
 
-This tool is a python library wrapper for Mal-unpack. Code has been adapted from the python runner.
+This tool is a python library wrapper for Mal-unpack. Code has been adapted from the [python runner](../runner).
 
 # Getting started
 
