@@ -75,12 +75,7 @@ def log_mal_unp_out(outstr, dump_dir, filename):
     with open(filepath, "ab") as handle:
         handle.write(outstr)
   
-def run_and_dump(sample, timeout, sample_out_dir, root_out_dir):
-    is_64b, is_dll = get_config(sample)
-    if is_64b == None:
-        print("[-] Not a valid PE")
-        os.remove(sample)
-        return
+def run_and_dump(sample, is_64b, is_dll, timeout, sample_out_dir, root_out_dir):
 
     print("Is 64b: " + str(is_64b))
     print("Is DLL: " + str(is_dll))
@@ -116,7 +111,7 @@ def run_and_dump(sample, timeout, sample_out_dir, root_out_dir):
     print("mal_unpack result: " + mal_unp_res_to_str(result.returncode))
     log_mal_unp_out(result.stdout, root_out_dir, "mal_unp.stdout.txt")
     log_mal_unp_out(result.stderr, root_out_dir, "mal_unp.stderr.txt")
-        
+
 def calc_sha(filename):
     with open(filename, "rb") as f:
         rbytes = f.read()
@@ -133,13 +128,23 @@ def unpack_file(orig_file, timeout, out_dir):
     
     print("starting...")    
     sample_out_dir = out_dir + os.path.sep + sample_hash
+
+    is_64b, is_dll = get_config(orig_file)
+    if is_64b == None:
+        print("[-] Not a valid PE")
+        return
+        
     shutil.copy(orig_file, task_name)
-    run_and_dump(task_name, timeout, sample_out_dir, out_dir)
+    run_and_dump(task_name, is_64b, is_dll, timeout, sample_out_dir, out_dir)
     
 def unpack_dir(rootdir, timeout, out_dir):
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
-            filepath = str(os.path.join(subdir, file))
+            filepath = str(os.path.join(subdir, file))   
+            if not os.path.isfile(filepath):
+                # it is a directory, walk recursively:
+                unpack_dir(filepath, timeout, out_dir)
+                continue
             print(filepath)
             unpack_file(filepath, timeout, out_dir)
         
