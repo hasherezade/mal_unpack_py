@@ -76,6 +76,9 @@ def log_mal_unp_out(outstr, dump_dir, filename):
         handle.write(outstr)
   
 def run_and_dump(sample, is_64b, is_dll, timeout, sample_out_dir, root_out_dir):
+    mal_unpack_path = os.path.join(UTIL_PATH, MAL_UNPACK_EXE)
+    dll_load32_path = os.path.join(UTIL_PATH, DLL_LOAD32)
+    dll_load64_path = os.path.join(UTIL_PATH, DLL_LOAD64)
 
     print("Is 64b: " + str(is_64b))
     print("Is DLL: " + str(is_dll))
@@ -83,7 +86,8 @@ def run_and_dump(sample, is_64b, is_dll, timeout, sample_out_dir, root_out_dir):
     orig_name = sample
     sample = rename_sample(sample, is_dll)
     print("Sample name: " + sample)
-    cmd = [ os.path.join(UTIL_PATH, MAL_UNPACK_EXE),
+
+    cmd = [ mal_unpack_path,
     '/timeout' , str(timeout),
     '/dir', sample_out_dir,
     '/img', sample,
@@ -97,9 +101,9 @@ def run_and_dump(sample, is_64b, is_dll, timeout, sample_out_dir, root_out_dir):
         cmd.append('/cmd')
         cmd.append(sample + ' #1') #run the first exported function
         if is_64b:
-            exe_name = os.path.join(UTIL_PATH, DLL_LOAD64)
+            exe_name = dll_load64_path
         else:
-            exe_name = os.path.join(UTIL_PATH, DLL_LOAD32)
+            exe_name = dll_load32_path
 
     cmd.append('/exe')
     cmd.append(exe_name)

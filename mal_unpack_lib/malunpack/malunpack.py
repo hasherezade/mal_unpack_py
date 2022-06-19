@@ -17,9 +17,9 @@ try:
 except:
     UTIL_PATH="..\\..\\bin\\"
     
-MAL_UNPACK_EXE = UTIL_PATH + "mal_unpack.exe"
-DLL_LOAD64 = UTIL_PATH + "dll_load64.exe"
-DLL_LOAD32 = UTIL_PATH + "dll_load32.exe"
+MAL_UNPACK_EXE = "mal_unpack.exe"
+DLL_LOAD64 = "dll_load64.exe"
+DLL_LOAD32 = "dll_load32.exe"
 
 
 class MalUnpack:
@@ -86,19 +86,23 @@ class MalUnpack:
     def run_and_dump(self, dump_dir, timeout):
         """Main function that runs the mal-unpack executable."""
         # check required executable from malunpack:
-        if not os.path.isfile(MAL_UNPACK_EXE):
-            print("[ERROR] " + MAL_UNPACK_EXE + " not in current directory")
+        mal_unpack_path = os.path.join(UTIL_PATH, MAL_UNPACK_EXE)
+        dll_load32_path = os.path.join(UTIL_PATH, DLL_LOAD32)
+        dll_load64_path = os.path.join(UTIL_PATH, DLL_LOAD64)   
+        
+        if not os.path.isfile(mal_unpack_path):
+            print("[ERROR] MalUnpack binary missing. Please copy \'" + MAL_UNPACK_EXE + "\' to the \'" + UTIL_PATH + "\' directory")
             sys.exit()
-        if not os.path.isfile(DLL_LOAD64):
-            print("[ERROR] " + DLL_LOAD64 + " not in current directory")
+        if not os.path.isfile(dll_load64_path):
+            print("[ERROR] DLL load binary missing. Please copy \'" + DLL_LOAD64 + "\' to the \'" + UTIL_PATH + "\' directory")
             sys.exit()
-        if not os.path.isfile(DLL_LOAD32):
-            print("[ERROR] " + DLL_LOAD32 + " not in current directory")
+        if not os.path.isfile(dll_load32_path):
+            print("[ERROR] DLL load binary missing. Please copy \'" + DLL_LOAD32 + "\' to the \'" + UTIL_PATH + "\' directory")
             sys.exit()
 
         sample = self.rename_sample(self.is_dll)
-
-        cmd = [MAL_UNPACK_EXE,
+     
+        cmd = [mal_unpack_path,
         '/timeout', str(timeout),
         '/dir', dump_dir,
         '/img', sample,
@@ -112,9 +116,9 @@ class MalUnpack:
             # run the first exported function
             cmd.append(sample + ' #1')
             if self.is_64b:
-                sample = DLL_LOAD64
+                sample = dll_load64_path
             else:
-                sample = DLL_LOAD32
+                sample = dll_load32_path
 
         cmd.append('/exe')
         cmd.append(sample)
