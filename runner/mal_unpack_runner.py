@@ -75,7 +75,7 @@ def log_mal_unp_out(outstr, dump_dir, filename):
     with open(filepath, "ab") as handle:
         handle.write(outstr)
   
-def run_and_dump(sample, dump_dir, timeout):
+def run_and_dump(sample, timeout, sample_out_dir, root_out_dir):
     is_64b, is_dll = get_config(sample)
     if is_64b == None:
         print("[-] Not a valid PE")
@@ -90,7 +90,7 @@ def run_and_dump(sample, dump_dir, timeout):
     print("Sample name: " + sample)
     cmd = [MAL_UNPACK_EXE,
     '/timeout' , str(timeout),
-    '/dir', dump_dir,
+    '/dir', sample_out_dir,
     '/img', sample,
     '/hooks', '1',
     '/shellc' , '1',
@@ -113,8 +113,8 @@ def run_and_dump(sample, dump_dir, timeout):
         print("mal_unpack failed to run")
         return
     print("mal_unpack result: " + mal_unp_res_to_str(result.returncode))
-    log_mal_unp_out(result.stdout, DUMPS_DIR, "mal_unp.stdout.txt")
-    log_mal_unp_out(result.stderr, DUMPS_DIR, "mal_unp.stderr.txt")
+    log_mal_unp_out(result.stdout, root_out_dir, "mal_unp.stdout.txt")
+    log_mal_unp_out(result.stderr, root_out_dir, "mal_unp.stderr.txt")
         
 def calc_sha(filename):
     with open(filename, "rb") as f:
@@ -122,7 +122,7 @@ def calc_sha(filename):
         sha_digest = hashlib.sha256(rbytes).hexdigest()
         return sha_digest
         
-def unpack_file(orig_file, timeout):
+def unpack_file(orig_file, timeout, out_dir):
 
     sample_hash = calc_sha(orig_file)
     task_name = str(uuid.uuid4())
@@ -131,16 +131,16 @@ def unpack_file(orig_file, timeout):
     print("task ID: " + task_name)
     
     print("starting...")    
-    dir_name = DUMPS_DIR + os.path.sep + sample_hash
+    sample_out_dir = out_dir + os.path.sep + sample_hash
     shutil.copy(orig_file, task_name)
-    run_and_dump(task_name, dir_name, timeout)
+    run_and_dump(task_name, timeout, sample_out_dir, out_dir)
     
-def unpack_dir(rootdir, timeout):
+def unpack_dir(rootdir, timeout, out_dir):
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
             filepath = str(os.path.join(subdir, file))
             print(filepath)
-            unpack_file(filepath, timeout)
+            unpack_file(filepath, timeout, out_dir)
         
 def main():
 
@@ -159,6 +159,7 @@ def main():
     parser = argparse.ArgumentParser(description="MalUnpack Runner")
     parser.add_argument('--inpath', dest="inpath", default=None, help="Malware(s) to be unpacked: it can be a file or a directory",
                             required=True)
+    parser.add_argument('--outpath', dest="outpath", default=DUMPS_DIR, help="The directory where the output will be dumped")
     parser.add_argument('--timeout', dest="timeout", default=1000, help="Timeout, default = 1000", type=int)
     args = parser.parse_args()
     
@@ -171,13 +172,12 @@ def main():
     else:
         print("[ERROR] The given path does not exist" + args.inpath)
         return
-        
-    orig_file = args.inpath
+
     timeout = args.timeout
     if isFile:
-        unpack_file(orig_file, timeout)
+        unpack_file(args.inpath, timeout, args.outpath)
     else:
-        unpack_dir(orig_file, timeout)
+        unpack_dir(args.inpath, timeout, args.outpath)
 
 if __name__ == "__main__":
     main()
