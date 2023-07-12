@@ -13,8 +13,8 @@ from pathlib import Path
 
 url1 = 'https://github.com/hasherezade/pe_utils/releases/download/1.0/dll_load32.exe'
 url2 = 'https://github.com/hasherezade/pe_utils/releases/download/1.0/dll_load64.exe'
-url_mal_unp32 = "https://github.com/hasherezade/mal_unpack/releases/download/0.9.5/mal_unpack32.zip"
-url_mal_unp64 = "https://github.com/hasherezade/mal_unpack/releases/download/0.9.5/mal_unpack64.zip"
+url_mal_unp32 = "https://github.com/hasherezade/mal_unpack/releases/download/0.9.7/mal_unpack32.zip"
+url_mal_unp64 = "https://github.com/hasherezade/mal_unpack/releases/download/0.9.7/mal_unpack64.zip"
 
 def download_file(filename, url):  
     try:
