@@ -108,7 +108,11 @@ def run_and_dump(sample, is_64b, is_dll, timeout, sample_out_dir, root_out_dir):
     cmd.append('/exe')
     cmd.append(exe_name)
     result = subprocess.run(cmd, check=False, capture_output=True)
-    os.remove(sample)
+    try:
+        os.remove(sample)
+    except FileNotFoundError:
+        print("The sample autodeleted itself")
+        
     if (result.returncode is None):
         print("mal_unpack failed to run")
         return
